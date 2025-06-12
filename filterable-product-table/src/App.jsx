@@ -25,12 +25,12 @@ function ProductCategoryRow({ category }) {
   );
 }
 
-function ProductTable({ products, searchText, isStockOnly }) {
+function ProductTable({ products, searchText, inStockOnly }) {
   const rows = [];
   let lastCategory = null;
 
   products.forEach((product) => {
-    if (isStockOnly && !product.stocked) return;
+    if (inStockOnly && !product.stocked) return;
     if (!product.name.toLowerCase().includes(searchText)) return;
 
     if (product.category !== lastCategory) {
@@ -65,14 +65,14 @@ function ProductTable({ products, searchText, isStockOnly }) {
   );
 }
 
-function SearchBar({ searchText, isStockOnly }) {
+function SearchBar({ searchText, inStockOnly }) {
   return(
     <>
       <form>
         <input type="text" placeholder="Search.." value={searchText}/>
         <br/>
         <label>
-            <input type="checkbox" checked={isStockOnly}/>
+            <input type="checkbox" checked={inStockOnly}/>
              Only show products in stock
         </label>
       </form>
@@ -81,18 +81,18 @@ function SearchBar({ searchText, isStockOnly }) {
 }
 
 function FilterableProductTable({ products }) {
-  const [isStockOnly, setIsStockOnly] = useState(false);
+  const [inStockOnly, setInStockOnly] = useState(false);
   const [searchText, setSearchText] = useState('');
 
   return (
     <>
       <SearchBar 
         searchText={searchText} 
-        isStockOnly={isStockOnly} />
+        isStockOnly={inStockOnly} />
       <ProductTable 
         products={products}
         searchText={searchText} 
-        isStockOnly={isStockOnly} />
+        isStockOnly={inStockOnly} />
     </>
   );
 }
