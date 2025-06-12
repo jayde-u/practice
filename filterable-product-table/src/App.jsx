@@ -1,3 +1,4 @@
+import { useState } from "react";
 
 function ProductRow({ product }) {
   const colorStyle = {
@@ -24,11 +25,14 @@ function ProductCategoryRow({ category }) {
   );
 }
 
-function ProductTable({ products }) {
+function ProductTable({ products, searchText, isStockOnly }) {
   const rows = [];
   let lastCategory = null;
 
   products.forEach((product) => {
+    if (isStockOnly && !product.stocked) return;
+    if (!product.name.toLowerCase().includes(searchText)) return;
+
     if (product.category !== lastCategory) {
       rows.push(
         <ProductCategoryRow
@@ -61,15 +65,14 @@ function ProductTable({ products }) {
   );
 }
 
-function SearchBar() {
+function SearchBar({ searchText, isStockOnly }) {
   return(
     <>
       <form>
-        <input type="text" placeholder="Search.."/>
+        <input type="text" placeholder="Search.." value={searchText}/>
         <br/>
-
         <label>
-            <input type="checkbox"/>
+            <input type="checkbox" checked={isStockOnly}/>
              Only show products in stock
         </label>
       </form>
@@ -78,10 +81,18 @@ function SearchBar() {
 }
 
 function FilterableProductTable({ products }) {
+  const [isStockOnly, setIsStockOnly] = useState(false);
+  const [searchText, setSearchText] = useState('');
+
   return (
     <>
-      <SearchBar />
-      <ProductTable products={products}/>
+      <SearchBar 
+        searchText={searchText} 
+        isStockOnly={isStockOnly} />
+      <ProductTable 
+        products={products}
+        searchText={searchText} 
+        isStockOnly={isStockOnly} />
     </>
   );
 }
